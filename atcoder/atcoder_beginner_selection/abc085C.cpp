@@ -2,21 +2,24 @@
 using namespace std;
 
 int main() {
-    for(int i=0; i<=3; i++) {
-        for(int j=0; j<=(3-i); j++) {
-            for(int k=0; k<=(3-i-j); k++) {
-                cout << i << " " << j << " " << k << endl;
+    int N, Y;
+    cin >> N >> Y;
+
+    int a = -1;     // 10000円の枚数
+    int b = -1;     // 5000円の枚数
+    int c = -1;     // 1000円の枚数
+
+    for(int i=0; i<=N; i++) {
+        for(int j=0; (i+j)<=N; j++) {
+            int k = N - i - j;
+            int sum = 10000*i + 5000*j + 1000*k;
+            if (sum == Y) {
+                a = i;
+                b = j;
+                c = k;
             }
         }
     }
 
-    cout << endl;
-
-    for(int i=0; i<3; i++) {
-        for(int j=0; j<3; j++) {
-            for(int k=0; k<3; k++) {
-                cout << i << " " << j << " " << k << endl;
-            }
-        }
-    }    
+    cout << a << " " << b << " " << c << endl;
 }
