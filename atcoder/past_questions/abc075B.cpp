@@ -9,20 +9,70 @@ char itoc(int i) {
     return '0' + i;
 }
 
-void addNumber(vector<vector<char>> &table, int i, int j) {
+bool isMine(vector<vector<char>> &table, int i, int j) {
+    if (table[i][j] == '#') {
+        return true;
+    } else {
+        return false;
+    }
+}
 
+void addNumber(vector<vector<char>> &table, int i, int j) {
     int H = table.size();
     int W = table[0].size();
 
-    // 外側より内にある時
-    if ((i > 0 && i < W) && (j > 0 && j < H)) {
-        // 左上
-        char now = table[i-1][j-1];
-        table[i-1][j-1] = itoc(ctoi(now) + 1);
+    // 上の行の更新
+    for(int dj=-1; dj<=1; dj++) {
+        // 範囲外ならbreak
+        if((i - 1) < 0) {
+            break;
+        }
 
-        // 上
-        now = table[i][j-1];
-        table[i][j-1] = itoc(ctoi(now) + 1);
+        if(((j+dj) < 0) || ((j+dj) >= W)) {
+            continue;
+        } else {
+            if (isMine(table, (i-1), (j+dj))) {
+                continue;
+            } else {
+                int now = ctoi(table[i-1][j+dj]);
+                table[i-1][j+dj] = itoc(now + 1);
+            }
+        }
+    }
+
+    // 左の更新
+    if((j-1) >= 0) {
+        if(isMine(table, i, (j-1)) == false) {
+            int now = ctoi(table[i][j-1]);
+            table[i][j-1] = itoc(now + 1);
+        }
+    }
+
+    // 右の更新
+    if((j+1) < W) {
+        if(isMine(table, i, (j+1)) == false) {
+            int now = ctoi(table[i][j+1]);
+            table[i][j+1] = itoc(now + 1);
+        }
+    }
+
+    // 自分の下の行の更新
+    for(int dj=-1; dj<=1; dj++) {
+        // 範囲外ならbreak
+        if((i + 1) >= H) {
+            break;
+        }
+
+        if(((j+dj)<0) || ((j+dj)>=W)) {
+            continue;
+        } else {
+            if(isMine(table, (i+1), (j+dj))) {
+                continue;
+            } else {
+                int now = ctoi(table[i+1][j+dj]);
+                table[i+1][j+dj] = itoc(now + 1);
+            }
+        }
     }
 
 }
@@ -48,5 +98,12 @@ int main() {
                 addNumber(table, i, j);
             }
         }
+    }
+
+    for(int i=0; i<H; i++) {
+        for(int j=0; j<W; j++) {
+            cout << table[i][j];
+        }
+        cout << endl;
     }
 }
