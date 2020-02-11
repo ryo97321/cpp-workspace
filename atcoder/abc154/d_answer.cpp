@@ -2,42 +2,37 @@
 using namespace std;
 
 int main() {
-    int N, K;
-    cin >> N >> K;
+    int n, k;
+    cin >> n >> k;
 
-    vector<int> ps(N, 0);
-    vector<double> p_means(N, 0.0);
-    vector<double> p_mean_sums(N, 0.0);
-
-    for (int i=0; i<N; i++) {
-        int p;
-        cin >> p;
-        ps[i] = p;
+    vector<int> p(n);
+    for(int i=0; i<n; i++) {
+        cin >> p[i];
+    }
+    for(int i=0; i<n; i++) {
+        p[i]++;
     }
 
-    // 期待値の前計算
-    for (int i=0; i<N; i++) {
-        double p_mean = (1.0 + (double)ps[i]) / 2.0;
-        p_means[i] = p_mean;
-    }
+    int mx = 0;
+    int s = 0;
+    queue<int> q;
 
-    // 累積和の前計算
-    for (int i=0; i<N; i++) {
-        if (i == 0) {
-            p_mean_sums[i] = p_means[i];
-        } else {
-            p_mean_sums[i] = p_means[i] + p_mean_sums[i-1];
+    for(int i=0; i<n; i++) {
+        s += p[i];
+        q.push(p[i]);
+
+        if (q.size() > k) {
+            s -= q.front(); q.pop();
+        }
+
+        if (q.size() == k) {
+            mx = max(mx, s);
         }
     }
 
-    // 隣接するK個の期待値の合計値
-    double max = -1.0;
-    for (int i=0; i<N-K; i++) {
-        if ((p_mean_sums[i+K] - p_mean_sums[i]) > max) {
-            max = p_mean_sums[i+K] - p_mean_sums[i];
-        }
-    }
+    double ans = mx;
+    ans /= 2;
 
-    cout << max << endl;
+    printf("%.10f\n", ans);
     return 0;
 }
