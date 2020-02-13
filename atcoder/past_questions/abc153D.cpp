@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-long long f(int H) {
+long long f(long long H) {
     if (H == 1) {
         return 1;
     } else {
