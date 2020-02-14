@@ -2,54 +2,26 @@
 using namespace std;
 
 template<class T> inline bool chmin(T &a, T b) { if (a > b) { a = b; return true; } return false; }
-template<class T> inline bool chmax(T &a, T b) { if (a < b) { a = b; return true; } return false; }
+
+const long long INF = 1LL << 60;
 
 int main() {
-    int N;
+    int N; 
     cin >> N;
 
-    vector<int> sixs;
-    vector<int> nines;
+    vector<long long> dp(110000);
+    for(int i=0; i<110000; i++) dp[i] = INF;
 
-    int i = 1;
-    while (true) {
-        if (pow(6, i) > N) break;
-        sixs.push_back(pow(6, i));
-        i++;
-    }
-    reverse(sixs.begin(), sixs.end());
-
-    i = 1;
-    while (true) {
-        if (pow(9, i) > N) break;
-        nines.push_back(pow(9, i));
-        i++;
-    }
-    reverse(nines.begin(), nines.end());
-
-    vector<int> moneys;
-    moneys.push_back(1);
-    for(int i=0; i<sixs.size(); i++) moneys.push_back(sixs[i]);
-    for(int i=0; i<nines.size(); i++) moneys.push_back(nines[i]);
-
-    sort(moneys.begin(), moneys.end());
-    moneys.erase(unique(moneys.begin(), moneys.end()), moneys.end());
-    reverse(moneys.begin(), moneys.end());
-
-    int count = 0;
-    while (true) {
-        for(int i=0; i<moneys.size(); i++) {
-            if (N - moneys[i] < 0) {
-                continue;
-            } else {
-                N -= moneys[i];
-                count++;
-                break;
-            }
+    dp[0] = 0;
+    for(int i=1; i<=N; i++) {
+        for(int pow6=1; pow6<=i; pow6*=6) {
+            chmin(dp[i], dp[i-pow6] + 1);
         }
-        if (N == 0) break;
+        for(int pow9=1; pow9<=i; pow9*=9) {
+            chmin(dp[i], dp[i-pow9] + 1);
+        }
     }
 
-    cout << count << endl;
+    cout << dp[N] << endl;
     return 0;
 }
